@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Товарный чек</title>
+</head>
+<body>
+    <div class="header">
+        <h1>ТОВАРНЫЙ ЧЕК №{{record_number}}/{{total_records}}</h1>
+        <div class="date">Дата генерации: {{generation_date}}</div>
+    </div>
+
+    <div class="info-block bordered">
+        <h2>Информация о поставщике</h2>
+        <p><strong>Поставщик:</strong> {{vendor}}</p>
+        <p><strong>Категория товара:</strong> {{category}}</p>
+    </div>
+
+    <div class="product-details">
+        <h2>Детали товара</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Наименование товара</th>
+                    <th>Описание</th>
+                    <th>Цена (руб.)</th>
+                    <th>Количество</th>
+                    <th>Сумма (руб.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="break-word">{{product}}</td>
+                    <td class="break-word text-left">{{description}}</td>
+                    <td class="text-right">{{price}}</td>
+                    <td class="text-center">{{qty}}</td>
+                    <td class="text-right">{{total}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="calculations bordered">
+        <h2>Расчеты</h2>
+        <table>
+            <tr>
+                <td class="text-left">Стоимость товара:</td>
+                <td class="text-right">{{price}} руб. × {{qty}} шт.</td>
+                <td class="text-right">{{subtotal}} руб.</td>
+            </tr>
+            <tr>
+                <td class="text-left">НДС (20%):</td>
+                <td class="text-right">{{subtotal}} × 20%</td>
+                <td class="text-right">{{vat}} руб.</td>
+            </tr>
+            <tr class="total">
+                <td class="text-left"><strong>ИТОГО К ОПЛАТЕ:</strong></td>
+                <td class="text-right"></td>
+                <td class="text-right"><strong>{{total}} руб.</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="notes">
+        <h3>Примечания:</h3>
+        <ul>
+            <li>Товар надлежащего качества обмену и возврату не подлежит</li>
+            <li>Гарантийный срок: 12 месяцев с даты покупки</li>
+            <li>При возврате требуется наличие оригинальной упаковки и чека</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>Чек сгенерирован автоматически. Является боепригодным документом.</p>
+        <p>Подпись поставщика: ___________________</p>
+        <p>Подпись покупателя: ___________________</p>
+        <p>М.П.</p>
+    </div>
+
+    <script>
+        // Автоматический расчет сумм
+        document.addEventListener('DOMContentLoaded', function() {
+            const price = parseFloat('{{price}}') || 0;
+            const qty = parseInt('{{qty}}') || 0;
+            const subtotal = price * qty;
+            const vat = subtotal * 0.2;
+            const total = subtotal + vat;
+            
+            // Обновляем значения в таблице
+            document.querySelectorAll('[data-calc="subtotal"]').forEach(el => {
+                el.textContent = subtotal.toLocaleString('ru-RU') + ' руб.';
+            });
+            
+            document.querySelectorAll('[data-calc="vat"]').forEach(el => {
+                el.textContent = vat.toLocaleString('ru-RU') + ' руб.';
+            });
+            
+            document.querySelectorAll('[data-calc="total"]').forEach(el => {
+                el.textContent = total.toLocaleString('ru-RU') + ' руб.';
+            });
+        });
+    </script>
+</body>
+</html>
